@@ -9,8 +9,11 @@ typedef struct Node {
 }node;
 
 
+node* Node(const char* name);
 
 node* createNode(const char* name);
+
+node* tmpNode();
 
 void freeNode(node* n);
 
@@ -29,4 +32,10 @@ void swapNode(node* m, node* n);
 node* findHead(node* n);
 
 node* findTail(node* n);
+
+node* searchNode(int position);
+
+void stand_back(node* n);
+
+void insertNode(int position, node* n);
 #endif

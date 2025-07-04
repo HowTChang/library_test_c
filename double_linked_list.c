@@ -8,6 +8,32 @@ static int nodeId = 0;
 node* head = NULL;
 node* tail = NULL;
 
+node* Node(const char* name) {
+	node* newNode = (node*)malloc(sizeof(node));
+	if (newNode == NULL) {
+		printf("Oop! something wrong!");
+		return NULL;
+	}
+
+	size_t length = strlen(name);
+
+	newNode->name = (char*)malloc(length + 1);
+
+	if (newNode->name == NULL) {
+		free(newNode);
+		printf("Error! memory locate error!");
+		return NULL;
+	}
+	newNode->num = -1;
+	strcpy(newNode->name, name);
+	newNode->next = NULL;
+	newNode->prev = NULL;
+
+	return newNode;
+}
+
+
+
 node* createNode(const char* name) {
 
 	node* newNode = (node*)malloc(sizeof(node));
@@ -43,6 +69,11 @@ node* createNode(const char* name) {
 	return newNode;
 }
 
+node* tmpNode() {
+	node* tmp = Node("NULL");
+	return tmp;
+}
+
 void freeNode(node* n) {
 	if (n != NULL) {
 		printf("sucessfully free Node %s !\n", n->name);
@@ -60,16 +91,10 @@ void freeList(node* head) {
 		return;
 	}
 	node* current = head;
-	while (current != NULL) {
-		if (current->next == NULL) {
-			freeNode(current);
-			printf("clean all!\n");
-			return;
-		}
 		node* nextNode = current->next;
 		freeNode(current);
 		current = nextNode;
-	}
+	
 	printf("clean all!");
 	return;
 }
@@ -90,9 +115,11 @@ void removeNode(node* n) {
 	if (n != NULL) {
 		if (n->next == NULL) {
 			n->prev->next = NULL;
+			tail = n->prev;
 		}
 		else if (n->prev == NULL) {
 			n->next->prev = NULL;
+			head = n->next;
 		}
 		else {
 			n->prev->next = n->next;
@@ -126,7 +153,7 @@ void printList(node* head) {
 
 void swap(node* m, node* n) {//only assume n > m
 
-	node* temp = createNode("temp");
+	node* temp = Node("temp");
 
 	temp->num = n->num;
 	temp->name = n->name;
@@ -156,7 +183,7 @@ void swapNode(node* m, node* n) {
 		printf("There something wrong about node value to swap! \n");
 		return;
 	}
-	node* temp = createNode("temp");
+	node* temp = Node("temp");
 	if (n->num > m->num) {
 		swap(m, n);
 		printf("swap Node %d and Node %d !\n", n->num, m->num);
@@ -170,6 +197,7 @@ void swapNode(node* m, node* n) {
 	else {
 		printf("swap num error!\n");
 	}
+	freeNode(temp);
 }
 
 node* findHead(node* n) {
@@ -205,6 +233,79 @@ node* findTail(node* n) {
 		return n;
 	}
 }
+
+node* search(int position) {
+	if (head == NULL) {
+		printf("Error head is NULL and search stop!\n");
+		return NULL;
+	}
+	node* current = head;
+	while (current != NULL) {
+		if (current->num == position) {
+			printf("Find it!\n");
+			return current;
+		}
+		current = current->next;
+	}
+	printf("Error! We don't find it!\n");
+	return NULL;
+}
+
+void stand_back(node* n) {
+	if (n == NULL) {
+		return;
+	}
+	node* current = n;
+	while (current != NULL) {
+			current->num += 1;
+			current = current->next;
+	}
+	printf("Stand back!!!\n");
+
+}
+
+void move_forward(node* n) {
+	if (n == NULL) {
+		return;
+	}
+	node* current = n;
+	while (current != NULL) {
+		current->num += 1;
+		current = current->next;
+	}
+	printf("Move forward!!!\n");
+}
+
+
+
+
+void insertNode(int position, const char* name) {
+	if (position < 0 || nodeId+1 < position) {
+		printf("Insert Error! Length is invalid!\n");
+		return;
+	}
+	else if (nodeId+1 == position) {
+		node* insertNode = createNode(name);
+		printf("Insert New Node %s !\n",insertNode->name);
+		return;
+	}
+	else {	
+		node* target = search(position);
+		node* pre = target->prev;
+		node* insertNode = Node(name);
+		insertNode->prev = pre;
+		insertNode->next = target;
+		insertNode->num = position;
+		target->prev = insertNode;
+		pre->next = insertNode;
+		stand_back(target);
+		printf("InsertNode!%d and targetNode %d \n",insertNode->num,target->num);
+		return;
+	}
+}
+
+
+
 
 
 

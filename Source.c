@@ -7,13 +7,13 @@ int main() {
 	node* first = createNode("Joshua");
 	node* second = createNode("Lily");
 	node* third = createNode("Casey");
-
+	insertNode(1, "HowTang");
 	//swapNode(first, second);
 	//setConnect(first, second);
 	//findHead(second);
-
-	printList(first);
-	freeList(first);
+	node* head = findHead(second);
+	printList(head);
+	freeList(head);
 
 	//freeNode(first);
 	return 0;
